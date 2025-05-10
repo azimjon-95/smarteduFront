@@ -1,0 +1,46 @@
+.expanded-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.expanded-table td {
+    padding: 5px 16px;
+    border: 1px solid #ddd;
+}
+
+.teacher_headre {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    gap: 20px;
+    padding: 0 10px;
+    margin-bottom: 10px;
+}
+
+.expanded-table tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+
+.expanded-table tr:hover {
+    background-color: #f1f1f1;
+}
+
+.expanded-table td:first-child {
+    font-weight: bold;
+    background-color: #f2f2f2;
+    width: 20%;
+}
+
+.icon-link {
+    color: #000e5b;
+    /* Ikonaning rangini sozlash */
+    text-decoration: none;
+    /* Chizilgan liniyani olib tashlash */
+}
+
+.icon-link i {
+    font-size: 1.2rem;
+    /* Ikonaning o'lchamini sozlash */
+    cursor: pointer;
+    /* Kursorni qo'lga o'zgartirish */
+}

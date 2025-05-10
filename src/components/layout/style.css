@@ -1,0 +1,257 @@
+.mainLogo {
+    width: 95%;
+    height: 50px;
+    background: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 15px;
+    margin-left: 5px;
+    margin-top: 5px;
+    transition: all .5s;
+    overflow: hidden;
+    /* z-index: 2; */
+}
+
+.mainLogoNone {
+    height: 50px;
+    width: 50px;
+    border-radius: 50%;
+    background: #fff;
+    overflow: hidden;
+    display: flex;
+    margin: 5px;
+    margin-left: 13px;
+    align-items: center;
+    justify-content: center;
+    transition: all .5s;
+    /* z-index: 2; */
+}
+
+.maincartIn {
+    width: 100% !important;
+    height: calc(100vh - 60px);
+    transition: all .5s;
+    overflow: auto !important;
+    overflow-x: auto !important;
+    padding: 5px;
+    z-index: 2;
+}
+
+.maincartIn::-webkit-scrollbar {
+    width: 4px;
+    height: 0px !important;
+}
+
+.maincartIn::-webkit-scrollbar-track {
+    background-color: #080f5e00 !important;
+    border-radius: 4px;
+}
+
+.maincartIn::-webkit-scrollbar-thumb {
+    background-color: #080f5e !important;
+    border-radius: 4px;
+}
+
+.site_layout {
+    width: 100%;
+    height: 60px;
+    background: transparent;
+    overflow: hidden;
+    background: #e3e3e3;
+}
+
+.MainNavbar {
+    width: 100%;
+    height: 55px;
+    box-shadow: 0 0 2px gray;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 10px;
+    background: transparent;
+    position: relative;
+    overflow: hidden;
+}
+
+:where(.css-dev-only-do-not-override-zg0ahe).ant-menu-dark .ant-menu-item-selected,
+:where(.css-dev-only-do-not-override-zg0ahe).ant-menu-dark>.ant-menu .ant-menu-item-selected {
+    background: #fff !important;
+}
+
+:where(.css-dev-only-do-not-override-zg0ahe).ant-menu-dark .ant-menu-item-selected,
+:where(.css-dev-only-do-not-override-zg0ahe).ant-menu-dark>.ant-menu .ant-menu-item-selected {
+    color: #052c65 !important;
+}
+
+.ant-menu-item-selected a {
+    color: #052c65 !important;
+}
+
+.custom-sider {
+    /* background: #048e38; */
+    display: flex;
+    z-index: 3;
+    flex-direction: column;
+    justify-content: space-between;
+    position: relative;
+}
+
+.sider-top {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.custom-trigger {
+    background: #ff5733;
+    color: #ffffff;
+    width: 100%;
+    text-align: center;
+    cursor: pointer;
+    padding: 10px 0;
+}
+
+.custom-trigger:hover {
+    background: #e04a2f;
+}
+
+.allBalans {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: "center";
+    gap: 2px;
+    border-radius: 4px;
+    background: #ffffffbb;
+    box-shadow: 0 0 2px gray;
+    padding: 2px 10px;
+    z-index: 5;
+}
+
+/* style.css */
+
+@media (max-width: 768px) {
+    .custom-sider {
+        display: none;
+    }
+
+    .custom-menu-horizontal {
+        display: block;
+        display: flex;
+        height: 60px;
+        z-index: 5;
+    }
+
+    .MenuMobile {
+        position: fixed;
+        bottom: 0;
+        right: 0;
+        left: 0;
+        background: rgb(33, 37, 41);
+        width: 100%;
+        display: flex;
+        justify-content: space-between;
+        padding: 2px 10px;
+        gap: 5px;
+    }
+
+    .mobileBottom_menu>span {
+        line-height: 22px;
+    }
+
+    .Space_mobile {
+        width: 100%;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .mobileBottom_menu {
+        color: #b8b8b8;
+        z-index: 5;
+    }
+
+    .mobileBottom_menu span a {
+        width: 100%;
+    }
+
+    /* Barcha menyu elementlarini bir qator qilib ko'rsatish */
+    .menu-horizontal {
+        width: 100%;
+        display: flex;
+        flex-wrap: nowrap;
+        overflow-x: auto;
+        /* Menyuni o'ngga scroll qilish imkonini beradi */
+        white-space: nowrap;
+        /* Elementlarning bir qatorga joylashishini ta'minlaydi */
+    }
+
+    /* Scroll uchun qidirish oynasi */
+    .menu-horizontal::-webkit-scrollbar {
+        height: 4px;
+        /* Scroll bar balandligi */
+    }
+
+    .menu-horizontal::-webkit-scrollbar-thumb {
+        background-color: #888;
+        /* Scroll bar rangi */
+        border-radius: 4px;
+        /* Radius */
+    }
+
+    .menu-horizontal::-webkit-scrollbar-thumb:hover {
+        background-color: #555;
+        /* Hover holatda scroll bar rangi */
+    }
+
+    .ant-menu-overflow-item-rest {
+        display: none;
+        /* O'zgarishi kerak bo'lgan bo'limni ko'rsatadi */
+    }
+}
+
+.custom-menu-horizontal {
+    display: none;
+}
+
+
+
+
+
+
+
+/* ======================= */
+.AppQr {
+    text-align: center;
+    margin-top: 50px;
+    font-family: Arial, sans-serif;
+    position: absolute;
+    bottom: -15px;
+}
+
+.AppQr h1 {
+    color: #333;
+}
+
+.AppQr input {
+    border: none;
+    border-top: 2px solid #ffffff26;
+    outline: none;
+    padding: 4px 10px;
+    font-size: 16px;
+    margin-bottom: 20px;
+    width: 100%;
+    background: transparent;
+}
+
+
+
+.AppQr input:disabled {
+    background-color: #f0f0f0;
+    cursor: not-allowed;
+}
+
+.AppQr p {
+    font-size: 18px;
+}

@@ -1,0 +1,45 @@
+/* ---new----- */
+.userSingle-info {
+  width: 100%;
+  min-height: 400px;
+  background: #ecf0f5;
+  padding: 5px;
+  display: flex;
+  gap: 10px;
+}
+
+.Form-Item {
+  margin: 4px 0;
+}
+
+.userSingle-info-box {
+  width: 50%;
+  background: #fff;
+  border-top: 3px solid #09c2ef;
+  border-radius: 5px;
+  padding: 8px;
+  display: flex;
+}
+
+.userSingle-info-box>div {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.ObjIng {
+  width: 60px;
+  height: 60px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.ObjIng>img {
+  width: 100%;
+  height: 100%;
+}
+
+.react-international-phone-input-container .react-international-phone-country-selector {
+  display: none;
+}

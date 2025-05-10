@@ -1,0 +1,13 @@
+.reachStudents_box {
+    width: 100%;
+    height: 100vh;
+}
+
+.reachStudents {
+    width: 100%;
+    height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: space-evenly;
+    gap: 10px;
+}
