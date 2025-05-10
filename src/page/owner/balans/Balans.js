@@ -3,6 +3,7 @@ import './style.css';
 import PortfolioPerformance from './Performance';
 import TechnicalSupport from './Support';
 import TimelineExample from './TimelineExample';
+import { useGetGenerateChartDataQuery } from '../../../context/payStudentsApi';
 import { Line } from 'react-chartjs-2';
 import {
     Chart as ChartJS,
@@ -14,8 +15,10 @@ import {
     Tooltip,
     Legend,
 } from 'chart.js';
-import axios from 'axios';
 import moment from 'moment';
+
+// Set moment locale to Russian for month names
+moment.locale('ru');
 
 // Register Chart.js components
 ChartJS.register(
@@ -28,56 +31,16 @@ ChartJS.register(
     Legend
 );
 
-// Function to generate dynamic mock data
-const generateMockData = () => {
-    const currentMonth = moment().format('MMMM');
-    const daysInMonth = moment().daysInMonth();
-    const labels = Array.from({ length: daysInMonth }, (_, i) => i + 1);
-
-    // Generate random income (1000–5000, some days 0)
-    const income = labels.map(() =>
-        Math.random() > 0.3 ? Math.floor(Math.random() * 4000) + 1000 : 0
-    );
-
-    // Generate random expenses (500–3000, some days 0)
-    const expenses = labels.map(() =>
-        Math.random() > 0.4 ? Math.floor(Math.random() * 2500) + 500 : 0
-    );
-
-    return {
-        labels,
-        income,
-        expenses,
-        month: currentMonth,
-    };
-};
-
 function Balans() {
-    const [chartData, setChartData] = useState(null);
-
-    useEffect(() => {
-        const fetchData = async () => {
-            try {
-                const response = await axios.get('http://localhost:5000/balans/monthly_analysis', {
-                    timeout: 5000, // 5-second timeout
-                });
-                setChartData(response.data);
-            } catch (error) {
-                console.error('Error fetching data:', error);
-                // Fallback to mock data on error
-                setChartData(generateMockData());
-            }
-        };
-        fetchData();
-    }, []);
-
-    const data = chartData
+    const { data: chartData, isLoading, error } = useGetGenerateChartDataQuery();
+    // Chart data configuration
+    const data = chartData?.data
         ? {
-            labels: chartData.labels,
+            labels: chartData.data.labels,
             datasets: [
                 {
                     label: 'Daromad',
-                    data: chartData.income,
+                    data: chartData.data.income,
                     borderColor: 'rgba(75, 192, 192, 1)',
                     backgroundColor: 'rgba(75, 192, 192, 0.2)',
                     fill: false,
@@ -85,7 +48,7 @@ function Balans() {
                 },
                 {
                     label: 'Xarajatlar',
-                    data: chartData.expenses,
+                    data: chartData.data.expenses,
                     borderColor: 'rgba(255, 99, 132, 1)',
                     backgroundColor: 'rgba(255, 99, 132, 0.2)',
                     fill: false,
@@ -95,6 +58,7 @@ function Balans() {
         }
         : {};
 
+    // Chart options
     const options = {
         responsive: true,
         plugins: {
@@ -103,9 +67,11 @@ function Balans() {
             },
             title: {
                 display: true,
-                text: chartData
-                    ? `Daromad va Xarajatlar - ${chartData.month} ${chartData.isMock ? '(Soxta Malumotlar) ' : ''}`
-                    : 'Yuklanmoqda...',
+                text: chartData?.data?.month
+                    ? `Daromad va Xarajatlar - ${chartData.data.month}`
+                    : isLoading
+                        ? 'Yuklanmoqda...'
+                        : 'Ma\'lumotlar topilmadi',
             },
         },
         scales: {
@@ -113,13 +79,13 @@ function Balans() {
                 beginAtZero: true,
                 title: {
                     display: true,
-                    text: 'Amount',
+                    text: 'Miqdor',
                 },
             },
             x: {
                 title: {
                     display: true,
-                    text: 'Day of Month',
+                    text: 'Oyning kuni',
                 },
             },
         },
@@ -129,13 +95,18 @@ function Balans() {
         <div className="dashboard">
             <PortfolioPerformance />
             <div style={{ position: 'relative', width: '100%', height: '300px' }}>
-                {chartData ? (
+                {isLoading ? (
+                    <p className="text-center">Yuklanmoqda...</p>
+                ) : error ? (
+                    <p className="text-center text-danger">
+                        Xatolik yuz berdi: {error?.data?.message || error.message || 'Ma\'lumotlarni yuklab bo\'lmadi'}
+                    </p>
+                ) : chartData?.data ? (
                     <Line data={data} options={{ ...options, maintainAspectRatio: false }} />
                 ) : (
-                    <p className="text-center">Loading line chart...</p>
+                    <p className="text-center">Ma\'lumotlar mavjud emas</p>
                 )}
             </div>
-
             <div className="content_balans">
                 <TechnicalSupport />
                 <TimelineExample />

@@ -26,7 +26,12 @@ export const payStudentsApi = api.injectEndpoints({
             query: (id) => `/api/payments/${id}`,
             providesTags: ['Payment']
         }),
-        //getByStudentId/:id
+        ///generate-mock-data
+        getGenerateChartData: builder.query({
+            query: () => `/api/generatechartdata`,
+            providesTags: ['Payment']
+        }),
+
         getPaymentsByStudentId: builder.query({
             query: (id) => `/api/payments/getByStudentId/${id}`,
             providesTags: ['Payment']
@@ -57,7 +62,8 @@ export const {
     useUpdatePaymentMutation,
     useDeletePaymentMutation,
     useGetPaymentsByStudentIdQuery,
-    useProcessPaymentsMutation
+    useProcessPaymentsMutation,
+    useGetGenerateChartDataQuery
 } = payStudentsApi;
 
 export default api;

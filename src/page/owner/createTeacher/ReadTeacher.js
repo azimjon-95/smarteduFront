@@ -2,27 +2,29 @@ import React, { useState, useMemo } from 'react';
 import { Button, Input, message, Spin, Alert, Modal, Form, Row, Col } from 'antd';
 import { Link } from 'react-router-dom';
 import { useGetStudentQuery } from '../../../context/studentsApi';
-import { useGetAllTeachersQuery, useUpdateTeacherMutation } from '../../../context/teacherApi';
+import { useGetAllTeachersQuery, useUpdateTeacherMutation, useDeleteTeacherMutation } from '../../../context/teacherApi';
 import './teachersTable.css';
 import '../../../components/table-Css/css/main.min.css';
 import '../../../components/table-Css/css/bulma.min.css';
-import { UserAddOutlined } from '@ant-design/icons';
-import { FaInfoCircle } from 'react-icons/fa'; // react-icons'dan icon import qilinmoqda
+import { UserAddOutlined, DeleteOutlined } from '@ant-design/icons';
+import { FaInfoCircle } from 'react-icons/fa';
 import { capitalizeFirstLetter } from '../../../hook/CapitalizeFirstLitter';
 import { useGetAllRegistrationsQuery } from '../../../context/groupsApi';
-import LoadingSpinner from '../../../components/LoadingSpinner'; // Importing the LoadingSpinner component
+import LoadingSpinner from '../../../components/LoadingSpinner';
 import { PhoneNumberFormat } from '../../../hook/NumberFormat';
-// import moment from 'moment';
 
 const TeachersTable = () => {
     const { data: students } = useGetStudentQuery();
     const { data: registrations } = useGetAllRegistrationsQuery();
     const { data: teacherData, error, isLoading, refetch } = useGetAllTeachersQuery();
     const [updateTeacher] = useUpdateTeacherMutation();
+    const [deleteTeacher, { isLoading: isDeleting }] = useDeleteTeacherMutation();
     const [isEditModalVisible, setIsEditModalVisible] = useState(false);
     const [editingTeacher] = useState(null);
     const [form] = Form.useForm();
     const [searchTerm, setSearchTerm] = useState('');
+    const [deleteModalVisible, setDeleteModalVisible] = useState(false);
+    const [teacherToDelete, setTeacherToDelete] = useState(null);
     const teachers = teacherData?.filter((i) => i.teacherType === "teacher");
 
     const studentCounts = useMemo(() => {
@@ -47,7 +49,6 @@ const TeachersTable = () => {
         return counts;
     }, [registrations]);
 
-
     const handleEditSubmit = async (values) => {
         try {
             await updateTeacher({ id: editingTeacher._id, ...values });
@@ -59,8 +60,23 @@ const TeachersTable = () => {
         }
     };
 
+    const handleDelete = async () => {
+        try {
+            await deleteTeacher(teacherToDelete?._id).unwrap();
+            message.success('O‘qituvchi muvaffaqiyatli o‘chirildi');
+            setDeleteModalVisible(false);
+            setTeacherToDelete(null);
+            refetch(); // Refetch to update the table
+        } catch (error) {
+            message.error('O‘qituvchini o‘chirishda xato yuz berdi');
+            console.error('Delete error:', error);
+        }
+    };
 
-
+    const showDeleteConfirm = (teacher) => {
+        setTeacherToDelete(teacher);
+        setDeleteModalVisible(true);
+    };
 
     const onSearch = (e) => {
         setSearchTerm(e.target.value);
@@ -73,18 +89,10 @@ const TeachersTable = () => {
         s.phone.toLowerCase().includes(searchTerm.toLowerCase())
     );
 
-
-    if (isLoading) {
-        return <div style={{ width: "100%", heght: "500px", display: "flex", justifyContent: "center" }}><Spin tip="Yuklanmoqda..." size="large" /></div>;
-    }
-
-    // if (error) {
-    //     return <Alert message="Xato" description={error.message} type="error" showIcon />;
-    // }
-
     if (isLoading) {
         return <LoadingSpinner />;
     }
+
     return (
         <>
             <div className='teacher_headre'>
@@ -97,7 +105,6 @@ const TeachersTable = () => {
                     <Button><UserAddOutlined /></Button>
                 </Link>
             </div>
-
 
             <div className="b-table">
                 <div className="table-wrapper has-mobile-cards">
@@ -124,6 +131,14 @@ const TeachersTable = () => {
                                         <Link to={`/single_page/${item._id}`} className="icon-link">
                                             <FaInfoCircle />
                                         </Link>
+                                        <Button
+                                            type="link"
+                                            danger
+                                            icon={<DeleteOutlined />}
+                                            onClick={() => showDeleteConfirm(item)}
+                                            loading={isDeleting && teacherToDelete?._id === item._id}
+                                            style={{ marginLeft: 8 }}
+                                        />
                                     </td>
                                 </tr>
                             ))}
@@ -131,7 +146,6 @@ const TeachersTable = () => {
                     </table>
                 </div>
             </div>
-
 
             <Modal
                 title="O‘qituvchini tahrirlash"
@@ -291,6 +305,22 @@ const TeachersTable = () => {
                         </Col>
                     </Row>
                 </Form>
+            </Modal>
+
+            <Modal
+                title="O‘qituvchini o‘chirish"
+                visible={deleteModalVisible}
+                onOk={handleDelete}
+                onCancel={() => {
+                    setDeleteModalVisible(false);
+                    setTeacherToDelete(null);
+                }}
+                okText="O‘chirish"
+                cancelText="Bekor qilish"
+                okButtonProps={{ danger: true }}
+                confirmLoading={isDeleting}
+            >
+                <p>Haqiqatan ham ushbu o‘qituvchini o‘chirmoqchimisiz?</p>
             </Modal>
         </>
     );

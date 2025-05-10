@@ -37,10 +37,11 @@ const RegisterPage = () => {
                 dateOfBirth: values.dateOfBirth.format('YYYY-MM-DD'), // Format date
             };
 
-            await createTeacher(formattedValues).unwrap();
+            const res = await createTeacher(formattedValues).unwrap();
+
             notification.success({
                 message: 'Muvaffaqiyat',
-                description: 'O‘qituvchi muvaffaqiyatli ro‘yxatdan o‘tdi',
+                description: res.message || 'O‘qituvchi muvaffaqiyatli ro‘yxatdan o‘tdi',
             });
 
             form.resetFields();
@@ -49,7 +50,7 @@ const RegisterPage = () => {
         } catch (error) {
             notification.error({
                 message: 'Xatolik',
-                description: 'Ro‘yxatdan o‘tishda xatolik yuz berdi',
+                description: error.data.message || 'Ro‘yxatdan o‘tishda xatolik yuz berdi',
             });
             console.error('Registration error:', error);
         }
@@ -235,7 +236,7 @@ const RegisterPage = () => {
                     <Col xs={24} sm={16} md={8}>
                         <Form.Item
                             name="username"
-                            label="Foydalanuvchi nomi"
+                            label="login (username)"
                             rules={[
                                 { required: true, message: 'Foydalanuvchi nomini kiriting' },
                                 { min: 3, message: 'Kamida 3 belgi bo‘lishi kerak' }
