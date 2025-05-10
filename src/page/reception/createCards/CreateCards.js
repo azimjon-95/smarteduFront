@@ -52,11 +52,12 @@ const CreateCards = () => {
     });
 
     // API Queries and Mutations
-    const { data: teachers = [] } = useGetAllTeachersQuery();
+    const { data: teacherData = [] } = useGetAllTeachersQuery();
     const { data: registrations, isLoading, error, refetch } = useGetAllRegistrationsQuery();
     const [createRegistration] = useCreateRegistrationMutation();
     const [deleteRegistration] = useDeleteRegistrationMutation();
     const [updateTeachers] = useUpdateTeachersMutation();
+    const teachers = teacherData?.filter((i) => i.teacherType !== "owner");
 
     // Memoized Data
     const teacherOptions = useMemo(

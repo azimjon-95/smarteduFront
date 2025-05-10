@@ -17,13 +17,13 @@ import { PhoneNumberFormat } from '../../../hook/NumberFormat';
 const TeachersTable = () => {
     const { data: students } = useGetStudentQuery();
     const { data: registrations } = useGetAllRegistrationsQuery();
-    const { data: teachers, error, isLoading, refetch } = useGetAllTeachersQuery();
+    const { data: teacherData, error, isLoading, refetch } = useGetAllTeachersQuery();
     const [updateTeacher] = useUpdateTeacherMutation();
     const [isEditModalVisible, setIsEditModalVisible] = useState(false);
     const [editingTeacher] = useState(null);
     const [form] = Form.useForm();
     const [searchTerm, setSearchTerm] = useState('');
-    // const [expandedRowKey, setExpandedRowKey] = useState(null);  // State to keep track of the expanded row key
+    const teachers = teacherData?.filter((i) => i.teacherType !== "owner");
 
     const studentCounts = useMemo(() => {
         const counts = new Map();

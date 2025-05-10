@@ -32,7 +32,7 @@ const RegisterPage = () => {
         try {
             const formattedValues = {
                 ...values,
-                teacherType: 'owner',
+                teacherType: 'teacher',
                 phone,
                 dateOfBirth: values.dateOfBirth.format('YYYY-MM-DD'), // Format date
             };
