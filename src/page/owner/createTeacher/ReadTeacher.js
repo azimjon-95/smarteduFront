@@ -23,7 +23,7 @@ const TeachersTable = () => {
     const [editingTeacher] = useState(null);
     const [form] = Form.useForm();
     const [searchTerm, setSearchTerm] = useState('');
-    const teachers = teacherData?.filter((i) => i.teacherType !== "owner");
+    const teachers = teacherData?.filter((i) => i.teacherType === "teacher");
 
     const studentCounts = useMemo(() => {
         const counts = new Map();
