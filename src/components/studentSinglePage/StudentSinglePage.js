@@ -359,7 +359,7 @@ const StudentSinglePage = () => {
             });
 
             // Text uchun orqa fon yaratamiz
-            ctx.fillStyle = '#ffffff';
+            ctx.fillStyle = '#000000';
             ctx.fillRect(0, size, size, textHeight);
 
             // Ism-familyani yozamiz
@@ -372,7 +372,7 @@ const StudentSinglePage = () => {
             const dataUrl = canvas.toDataURL('image/png');
             const link = document.createElement('a');
             link.href = dataUrl;
-            link.download = `qr_${id}.png`;
+            link.download = `qr_${fullName}.png`;
             document.body.appendChild(link);
             link.click();
             document.body.removeChild(link);
@@ -397,7 +397,7 @@ const StudentSinglePage = () => {
                 <UserDeleteOutlined style={{ marginRight: 8 }} /> Chiqarib yuborish
             </button>
 
-            <button className="settings-menu-item" onClick={() => handleGenerateQr(id)}>
+            <button className="settings-menu-item" onClick={() => handleGenerateQr(id, student)}>
                 <BsQrCodeScan style={{ marginRight: 8 }} /> QR olish
             </button>
         </div>
