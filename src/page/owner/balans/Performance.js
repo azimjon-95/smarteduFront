@@ -150,7 +150,7 @@ function PortfolioPerformance() {
                         <div className="performance-item">
                             <p>Umumiy balans</p>
                             <h3>{formatMoney(totalBalance)}</h3>
-                            <p>O'sish tezligi: 14,1%</p>
+                            {/* <p>O'sish tezligi: 14,1%</p> */}
                         </div>
                     </Tooltip>
                 </div>
@@ -161,7 +161,7 @@ function PortfolioPerformance() {
                     <div className="performance-item">
                         <p>Aktiv o'quvchilar</p>
                         <h3>{activeStudents.length}</h3>
-                        <p>6,55% o'sib ketdi</p>
+                        {/* <p>6,55% o'sib ketdi</p> */}
                     </div>
                 </div>
                 <div className="portfolio-performance-item">
@@ -172,7 +172,7 @@ function PortfolioPerformance() {
                         <div className="performance-item">
                             <p>Jami qarzdorlik</p>
                             <h3>{formatMoney(totalIndebtedness)}</h3>
-                            <p>7,35% o'sib ketdi</p>
+                            {/* <p>7,35% o'sib ketdi</p> */}
                         </div>
                     </Tooltip>
                 </div>

@@ -142,18 +142,74 @@ const StudentAttendanceJournal = () => {
 
 
     // Serverga bitta o'zgartirishni yuborish
+    // const sendToServer = useCallback(
+    //     debounce(async (studentId, day, value, type) => {
+    //         try {
+    //             const payload = [{
+    //                 studentId,
+    //                 subjects: group?.subjects || 'Unknown',
+    //                 teacherId: group?.teacherId || 'Unknown',
+    //                 [type]: [{
+    //                     date: `${day.toString().padStart(2, '0')}.${(moment().month() + 1).toString().padStart(2, '0')}.${moment().year()}`,
+    //                     [type === 'attendance' ? 'attendance' : 'grade']: value,
+    //                 }],
+    //             }];
+    //             await updateAttendance({ groupId: id, data: payload }).unwrap();
+    //             message.success(`${type === 'attendance' ? 'Davomat' : 'Baho'} saqlandi!`);
+    //         } catch (error) {
+    //             message.error(`${type === 'attendance' ? 'Davomat' : 'Baho'} saqlashda xatolik!`);
+    //             console.error('Save error:', error);
+    //         }
+    //     }, 500),
+    //     [id, updateAttendance, group]
+    // );
+
+    // Function to send attendance or grade updates to the server
     const sendToServer = useCallback(
         debounce(async (studentId, day, value, type) => {
             try {
-                const payload = [{
-                    studentId,
-                    subjects: group?.subjects || 'Unknown',
-                    teacherId: group?.teacherId || 'Unknown',
-                    [type]: [{
-                        date: `${day.toString().padStart(2, '0')}.${(moment().month() + 1).toString().padStart(2, '0')}.${moment().year()}`,
-                        [type === 'attendance' ? 'attendance' : 'grade']: value,
-                    }],
-                }];
+                // Validate inputs
+                if (!studentId || !day || !type || !['attendance', 'grades'].includes(type)) {
+                    throw new Error('Invalid input: studentId, day, and valid type are required');
+                }
+
+                // Normalize subjects (ensure it's a string)
+                let subjects = group?.subjects || 'Unknown';
+                if (Array.isArray(subjects)) {
+                    subjects = subjects[0] || 'Unknown'; // Take first subject or fallback
+                }
+
+                // Normalize teacherId (ensure it's a plain string)
+                let teacherId = group?.teacherId || 'Unknown';
+                if (typeof teacherId === 'string' && teacherId.startsWith('[')) {
+                    try {
+                        teacherId = JSON.parse(teacherId)[0] || 'Unknown'; // Parse JSON string and take first ID
+                    } catch (e) {
+                        throw new Error('Invalid teacherId format');
+                    }
+                }
+
+                // Format date as DD.MM.YYYY
+                const formattedDate = `${day.toString().padStart(2, '0')}.${(moment().month() + 1)
+                    .toString()
+                    .padStart(2, '0')}.${moment().year()}`;
+
+                // Prepare payload
+                const payload = [
+                    {
+                        studentId,
+                        subjects,
+                        teacherId,
+                        [type]: [
+                            {
+                                date: formattedDate,
+                                [type === 'attendance' ? 'attendance' : 'grade']: value,
+                            },
+                        ],
+                    },
+                ];
+
+                // Send to server
                 await updateAttendance({ groupId: id, data: payload }).unwrap();
                 message.success(`${type === 'attendance' ? 'Davomat' : 'Baho'} saqlandi!`);
             } catch (error) {

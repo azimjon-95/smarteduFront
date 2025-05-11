@@ -122,10 +122,11 @@ PaymentModal.propTypes = {
   isOpen: PropTypes.bool.isRequired,
   onClose: PropTypes.func.isRequired,
   payForLesson: PropTypes.number,
+
 };
 
 // StudentRow Component
-const StudentRow = ({ student, selectedStudent, paymentAmount, onPayment, onInputChange, onToggleModal }) => {
+const StudentRow = ({ student, isCreating, selectedStudent, paymentAmount, onPayment, onInputChange, onToggleModal }) => {
   return (
     <tr>
       <td data-label="Ism Familya">
@@ -154,6 +155,7 @@ const StudentRow = ({ student, selectedStudent, paymentAmount, onPayment, onInpu
             type="primary"
             onClick={() => onPayment(student._id)}
             disabled={!paymentAmount || selectedStudent !== student._id}
+            loading={isCreating} // Use the loading prop
           >
             To'lash
           </Button>
@@ -201,6 +203,7 @@ const PayController = () => {
 
   // Memoized data
   const mainData = useMemo(() => students?.filter((s) => s.state === "active") || [], [students]);
+  const [loadingPayments, setLoadingPayments] = useState({}); // Track loading per student
   const teacherNames = useMemo(
     () => Array.from(new Set(mainData.map((student) => student.teacherFullName))),
     [mainData]
@@ -245,10 +248,12 @@ const PayController = () => {
         message.error("To'lov miqdori 0 dan katta bo'lishi kerak");
         return;
       }
+      setLoadingPayments((prev) => ({ ...prev, [studentId]: true })); // Set loading for this student
 
       try {
         const student = mainData.find((s) => s._id === studentId);
         if (!student) throw new Error("O'quvchi topilmadi");
+
 
         const paymentData = {
           fullName: `${student.firstName} ${student.lastName}`,
@@ -274,6 +279,8 @@ const PayController = () => {
         setPaymentState({ amount: 0, studentId: null, inputValue: "" });
       } catch (error) {
         message.error(`Xato: ${error.data?.message || "To'lov amalga oshmadi"}`);
+      } finally {
+        setLoadingPayments((prev) => ({ ...prev, [studentId]: false })); // Reset loading
       }
     },
     [createPayment, updateStudent, mainData, paymentState]
@@ -402,6 +409,7 @@ const PayController = () => {
                     onPayment={handlePayment}
                     onInputChange={handleInputChange}
                     onToggleModal={togglePaymentModal}
+                    isCreating={loadingPayments[student._id] || false}
                   />
                 ))
               ) : (
@@ -425,3 +433,5 @@ const PayController = () => {
 };
 
 export default PayController;
+
+
