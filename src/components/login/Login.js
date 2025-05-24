@@ -7,21 +7,28 @@ import images from './images/1.png';
 import axios from "../../api";
 
 function Login({ setIsLoggedIn }) {
-    const { register, handleSubmit, reset, setError, clearErrors, formState: { errors } } = useForm();
+    const { register, handleSubmit, reset, setError, clearErrors, setValue, formState: { errors } } = useForm();
     const navigate = useNavigate();
     const [loading, setLoading] = useState(false);
+    const [rememberMe, setRememberMe] = useState(false); // Checkbox state
 
     useEffect(() => {
         const admin = localStorage.getItem("admin");
+        const savedUsername = localStorage.getItem("savedUsername");
+
         if (admin) {
             const routes = {
                 owner: "/reports",
-                reception: "/receptionHome",
-                doctor: "/appointments",
+                teacher: "/teacher"
             };
             navigate(routes[admin]);
         }
-    }, [navigate]);
+
+        if (savedUsername) {
+            setValue("username", savedUsername); // Pre-fill username
+            setRememberMe(true); // Check the checkbox
+        }
+    }, [navigate, setValue]);
 
     const onSubmit = async (data) => {
         if (!data.username || !data.password) {
@@ -40,14 +47,21 @@ function Login({ setIsLoggedIn }) {
         setLoading(true);
         try {
             const res = await axios.post("/api/teacher/signin", data);
-            if (res.data.token) {
-                const { token, teacherType, _id } = res.data.teacher;
-                localStorage.setItem("token", token); // Tokenni saqlash
-                localStorage.setItem("teacherType", teacherType);
-                localStorage.setItem("teacherId", _id);
+            if (res?.data?.token) {
+                localStorage.setItem("token", res?.data?.token);
+                localStorage.setItem("teacherType", res?.data?.teacher.teacherType);
+                localStorage.setItem("teacherId", res?.data?.teacher._id);
+
+                // Save username if "Meni eslab qol" is checked
+                if (rememberMe) {
+                    localStorage.setItem("savedUsername", data.username);
+                } else {
+                    localStorage.removeItem("savedUsername");
+                }
+
                 setIsLoggedIn(true);
                 message.success("Tizimga kirish muvaffaqiyatli yakunlandi!");
-                navigate("/reports");
+                navigate("/createCards");
             } else {
                 message.error("Kirishda xatolik yuz berdi");
             }
@@ -82,26 +96,45 @@ function Login({ setIsLoggedIn }) {
                             <p>Tizimga kirish</p>
                         </div>
                         <div className="input-group mb-3">
-                            <input id={`${errors.password ? 'error' : ''}`} type="text" className="form-control form-control-lg bg-light fs-6"
+                            <input
+                                id={`${errors.username ? 'error' : ''}`}
+                                type="text"
+                                className="form-control form-control-lg bg-light fs-6"
                                 placeholder={errors.username ? errors.username.message : "Foydalanuvchi nomi"}
                                 {...register("username")}
                             />
                         </div>
                         <div className="input-group mb-1">
-                            <input id={`${errors.password ? 'error' : ''}`} type="password" className="form-control form-control-lg bg-light fs-6" placeholder={errors.password ? errors.password.message : "Parol"} {...register("password")} />
+                            <input
+                                id={`${errors.password ? 'error' : ''}`}
+                                type="password"
+                                className="form-control form-control-lg bg-light fs-6"
+                                placeholder={errors.password ? errors.password.message : "Parol"}
+                                {...register("password")}
+                            />
                         </div>
                         <div className="input-group mb-5 d-flex justify-content-between">
                             <div className="form-check">
-                                <input type="checkbox" className="form-check-input" id="formCheck" />
-                                <label htmlFor="formCheck" className="form-check-label text-secondary"><small>Remember Me</small></label>
+                                <input
+                                    type="checkbox"
+                                    className="form-check-input"
+                                    id="formCheck"
+                                    checked={rememberMe}
+                                    onChange={(e) => setRememberMe(e.target.checked)}
+                                />
+                                <label htmlFor="formCheck" className="form-check-label text-secondary">
+                                    <small>Meni eslab qol</small>
+                                </label>
                             </div>
                             <div className="forgot">
-                                <small><a href="#"></a></small>
+                                <small>
+                                    <a href="/forgot-password">Parolni unutdingizmi?</a>
+                                </small>
                             </div>
                         </div>
                         <div className="input-group mb-3">
                             <button className="btn btn-lg btn-primary w-100 fs-6" disabled={loading}>
-                                {loading ? "Loading..." : "Login"}
+                                {loading ? "Yuklanmoqda..." : "Kirish"}
                             </button>
                         </div>
                         <div className="input-group mb-3">
@@ -109,8 +142,7 @@ function Login({ setIsLoggedIn }) {
                                 <small></small>
                             </button>
                         </div>
-                        <div className="row">
-                        </div>
+                        <div className="row"></div>
                     </form>
                 </div>
             </div>

@@ -188,7 +188,8 @@ const CustomLayout = () => {
         localStorage.removeItem("token");
         localStorage.removeItem("admin");
         localStorage.removeItem("doctorMongoId");
-        navigate("/login");
+        navigate("/login", { replace: true }); // Use replace to avoid adding to history
+        window.location.href = "/login"; // Fallback
     };
 
     const content = (
