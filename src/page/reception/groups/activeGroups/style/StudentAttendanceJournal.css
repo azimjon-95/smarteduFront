@@ -7,12 +7,12 @@
 
 .title-attend {
     display: flex;
-    width: 100%;
+    width: 70%;
     align-items: center;
-    justify-content: space-between;
+    /* justify-content: space-between; */
     flex-direction: column;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-    border: 1px solid #00000022;
+    /* box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1); */
+    /* border: 1px solid #00000022; */
     background: #fff;
     border-radius: 8px !important;
     padding-top: 5px;
@@ -36,6 +36,8 @@
     gap: 5px;
 }
 
+
+
 .title-head {
     font-size: 18px;
     font-weight: bold;
@@ -46,8 +48,36 @@
     width: 100%;
     background: #fff;
     border-radius: 8px;
-    /* box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1); */
+    display: flex;
     overflow-x: auto;
+}
+
+.title-attendContiner {
+    display: flex;
+    background: #fff;
+    gap: 10px;
+    width: 100%;
+}
+
+.attendance-actions {
+    width: 30%;
+    padding: 5px 0;
+    overflow: auto;
+}
+
+.attendance-actions::-webkit-scrollbar {
+    height: 3px;
+}
+
+.table-attend {
+    width: 100% !important;
+    display: flex;
+    flex-direction: column;
+}
+
+.title-attend,
+.attendance-actions {
+    transition: width 0.3s ease-in-out;
 }
 
 .card-attend::-webkit-scrollbar {
@@ -65,13 +95,9 @@
 }
 
 
-.table-attend {
-    display: flex;
-    flex-direction: column;
-}
 
 .table-header-row {
-    width: 100% !important;
+    width: 100%;
     position: relative;
     display: flex;
     align-items: center;
@@ -219,4 +245,579 @@
     font-weight: bold;
     border: 2px solid gold;
     border-radius: 8px;
+}
+
+
+/* Popover menu styles */
+.student-action-popover .ant-popover-inner {
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    /* Subtle shadow for depth */
+    background: #ffffff;
+    /* Clean white background */
+}
+
+.student-action-menu {
+    border: none;
+    padding: 0px 0;
+    min-width: 160px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.student-action-menu__item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 16px;
+    font-size: 14px;
+    color: #333333;
+    transition: all 0.3s ease;
+    border: none;
+    width: 100%;
+    border-radius: 8px;
+}
+
+.student-action-menu__item:hover {
+    background: #e6f0ff;
+    /* Light blue hover effect (Telegram-like) */
+    color: #0088cc;
+    /* Telegram blue */
+    transform: scale(1.02);
+    /* Subtle scale for interactivity */
+}
+
+.student-action-menu__icon {
+    font-size: 18px;
+    color: #0088cc;
+    /* Telegram blue */
+    transition: color 0.3s ease;
+}
+
+.student-action-menu__item:hover .student-action-menu__icon {
+    color: #40c4ff;
+    /* Lighter blue on hover */
+}
+
+/* Ensure button styles are consistent */
+.attendance-rowBtn .attendance-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 33px;
+    height: 30px;
+    border-radius: 50%;
+    padding: 0;
+    border: 1px solid gray;
+    background: #ffffff;
+    /* Telegram blue */
+    color: rgb(0, 0, 0);
+    cursor: pointer;
+    transition: background 0.3s, transform 0.2s;
+}
+
+.attendance-btn svg {
+    margin-top: 2px;
+}
+
+/* Telegram-style messaging panel (unchanged from previous response) */
+.telegram-message-modal .ant-modal-content {
+    border-radius: 12px;
+    background: #f0f2f5;
+}
+
+.message-panel {
+    display: flex;
+    flex-direction: column;
+    height: 400px;
+    padding: 10px;
+}
+
+.message-history {
+    flex: 1;
+    overflow-y: auto;
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    background: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAAC0lEQVQYV2NgAAIAAAUAAarVyFEAAAAASUVORK5CYII=');
+}
+
+.message-bubble {
+    max-width: 70%;
+    padding: 8px 12px;
+    border-radius: 12px;
+    position: relative;
+    margin-bottom: 10px;
+}
+
+.message-sent {
+    background: #0088cc;
+    color: white;
+    align-self: flex-end;
+    border-bottom-right-radius: 4px;
+}
+
+.message-received {
+    background: #ffffff;
+    color: #000000;
+    align-self: flex-start;
+    border-bottom-left-radius: 4px;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+.message-text {
+    margin: 0;
+    font-size: 14px;
+    line-height: 1.4;
+}
+
+.message-timestamp {
+    font-size: 10px;
+    color: #999999;
+    text-align: right;
+    display: block;
+    margin-top: 4px;
+}
+
+.message-input-container {
+    display: flex;
+    gap: 8px;
+    padding: 10px;
+    background: #ffffff;
+    border-top: 1px solid #e8e8e8;
+    border-radius: 0 0 12px 12px;
+}
+
+.message-input-container .ant-input {
+    border-radius: 20px;
+    padding: 8px 16px;
+}
+
+.message-input-container .ant-btn-primary {
+    border-radius: 20px;
+    background: #0088cc;
+    border: none;
+}
+
+/* Loading animation (unchanged from previous response) */
+.complex-loading-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    gap: 16px;
+    background: linear-gradient(135deg, #f0f2f5, #e6f0ff);
+}
+
+.complex-spinner {
+    position: relative;
+    width: 60px;
+    height: 60px;
+}
+
+.spinner-ring--outer {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 60px;
+    height: 60px;
+    border: 5px solid transparent;
+    border-top-color: #ff4d4f;
+    border-right-color: #1890ff;
+    border-radius: 50%;
+    animation: spin 1.2s linear infinite;
+}
+
+.spinner-ring--inner {
+    position: absolute;
+    top: 15px;
+    left: 15px;
+    width: 30px;
+    height: 30px;
+    border: 3px solid transparent;
+    border-bottom-color: #52c41a;
+    border-left-color: #fadb14;
+    border-radius: 50%;
+    animation: spin-reverse 0.8s linear infinite;
+}
+
+.spinner-pulse {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    width: 20px;
+    height: 20px;
+    background: radial-gradient(circle, #ff4d4f, #1890ff);
+    border-radius: 50%;
+    animation: pulse 1.5s ease-in-out infinite;
+}
+
+@keyframes spin {
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+@keyframes spin-reverse {
+    0% {
+        transform: rotate(360deg);
+    }
+
+    100% {
+        transform: rotate(0deg);
+    }
+}
+
+@keyframes pulse {
+
+    0%,
+    100% {
+        transform: scale(0.8);
+        opacity: 0.7;
+    }
+
+    50% {
+        transform: scale(1.2);
+        opacity: 1;
+    }
+}
+
+
+
+
+
+
+
+.complex-loading-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    /* Full viewport height */
+    gap: 16px;
+    background: linear-gradient(135deg, #f0f2f5, #e6f0ff);
+    /* Light gradient for educational feel */
+}
+
+.complex-spinner {
+    position: relative;
+    width: 60px;
+    height: 60px;
+}
+
+.spinner-ring--outer {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 60px;
+    height: 60px;
+    border: 5px solid transparent;
+    border-top-color: #ff4d4f;
+    /* Red */
+    border-right-color: #1890ff;
+    /* Blue */
+    border-radius: 50%;
+    animation: spin 1.2s linear infinite;
+}
+
+.spinner-ring--inner {
+    position: absolute;
+    top: 15px;
+    left: 15px;
+    width: 30px;
+    height: 30px;
+    border: 3px solid transparent;
+    border-bottom-color: #52c41a;
+    /* Green */
+    border-left-color: #fadb14;
+    /* Yellow */
+    border-radius: 50%;
+    animation: spin-reverse 0.8s linear infinite;
+}
+
+.spinner-core {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    width: 20px;
+    height: 20px;
+    background: radial-gradient(circle, #ff4d4f, #1890ff);
+    /* Red to blue gradient */
+    border-radius: 50%;
+    animation: pulse 1.5s ease-in-out infinite;
+}
+
+.loading-text {
+    font-size: 16px;
+    font-weight: 500;
+    color: #1890ff;
+    /* Ant Design blue */
+}
+
+/* Lesson plan styles */
+.lesson-schedule {
+    background: #fff;
+    border-radius: 8px;
+    padding: 5px 10px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    overflow-x: auto;
+    /* Allow horizontal scrolling for narrow containers */
+}
+
+.resize-handle {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    position: relative;
+}
+
+.btnChevronLeft,
+.btnChevronRight {
+    border: none;
+    background: none;
+    cursor: pointer;
+    font-size: 20px;
+    color: #0088cc;
+}
+
+.btnChevronLeft:disabled {
+    color: #b3b3b3;
+
+}
+
+.btnChevronRight:disabled {
+    color: #b3b3b3;
+}
+
+.btnChevronRight {
+    position: absolute;
+    top: -6px;
+    right: -6px;
+}
+
+.header-sectionBox {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 5px;
+}
+
+.btnChevronLeft {
+    position: absolute;
+    top: -6px;
+    left: -6px;
+}
+
+.resize-handle h2 {
+    font-size: 18px;
+    color: #0088cc;
+    margin: 0 0 10px;
+    font-weight: 600;
+}
+
+.schedule-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 14px;
+    min-width: 560px;
+    /* Ensure table doesn't collapse too much */
+}
+
+.schedule-table th,
+.schedule-table td {
+    padding: 8px;
+    text-align: left;
+    border: 1px solid #e8e8e8;
+}
+
+.schedule-table th {
+    background: #f8f8f8;
+    font-weight: bold;
+    color: #333;
+}
+
+.schedule-table td {
+    color: #555;
+    word-wrap: break-word;
+    /* Wrap long text */
+    max-width: 0;
+    /* Allow truncation with ellipsis */
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.schedule-table td:first-child {
+    width: 60px;
+    /* Dars (lesson number) */
+}
+
+.schedule-table td:nth-child(2) {
+    width: 150px;
+    /* Dars Nomi */
+}
+
+.schedule-table td:nth-child(3) {
+    width: 200px;
+    /* Mavzu Description (wider for longer text) */
+}
+
+.schedule-table td:nth-child(4) {
+    width: 150px;
+    /* Uyga Vazifa */
+}
+
+.schedule-row {
+    cursor: pointer;
+    transition: background 0.2s ease;
+}
+
+.schedule-row:hover {
+    background: #e6f3ff;
+    /* Light blue hover effect */
+}
+
+.schedule-row.current-lesson {
+    background: #e6f3ff;
+    font-weight: bold;
+}
+
+
+
+.lesson-select-container {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+.lesson-select-button {
+    padding: 5px 12px;
+    background-color: #fff;
+    border: 1px solid #d9d9d9;
+    border-radius: 4px;
+    text-align: left;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    cursor: pointer;
+    font-size: 14px;
+    color: #333;
+    transition: border-color 0.3s, box-shadow 0.3s;
+}
+
+.lesson-select-button:hover {
+    border-color: #1890ff;
+    box-shadow: 0 0 0 2px rgba(24, 144, 255, 0.2);
+}
+
+.custom-modal {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    width: 100%;
+    z-index: 1000;
+    animation: slideIn 0.3s ease-out;
+}
+
+.modal-content {
+    background-color: #fff !important;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    overflow: hidden;
+}
+
+.modal-headers {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 16px;
+    background-color: #f5f7fa;
+    border-bottom: 1px solid #e8e8e8;
+    margin: 0;
+}
+
+.modal-headers h3 {
+    margin: 0;
+    font-size: 16px;
+    color: #333;
+}
+
+.modal-close {
+    background: none;
+    border: none;
+    font-size: 18px;
+    color: #666;
+    cursor: pointer;
+    padding: 0;
+    line-height: 1;
+}
+
+.modal-close:hover {
+    color: #1890ff;
+}
+
+.modal-body {
+    max-height: 200px;
+    overflow-y: auto;
+    padding: 8px 0;
+    background: #fff;
+}
+
+.modal-lesson-item {
+    padding: 10px 16px;
+    cursor: pointer;
+    font-size: 14px;
+    color: #333;
+    transition: background-color 0.2s;
+}
+
+.modal-lesson-item:hover {
+    background-color: #f5f7fa;
+}
+
+.modal-lesson-item.selected {
+    background-color: #e6f7ff;
+    color: #1890ff;
+    font-weight: normal;
+}
+
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes spin {
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+@keyframes spin-reverse {
+    0% {
+        transform: rotate(360deg);
+    }
+
+    100% {
+        transform: rotate(0deg);
+    }
 }

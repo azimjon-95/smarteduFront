@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Avatar, Space, Layout, Menu, Button, Popover, message } from 'antd'; // Import message from antd
+import { Avatar, Space, Layout, Menu, Button, Popover, message } from 'antd';
 import { Link, Outlet, useLocation, useNavigate } from 'react-router-dom';
 import { GiTakeMyMoney } from "react-icons/gi";
 import {
@@ -11,6 +11,7 @@ import {
     UserOutlined
 } from '@ant-design/icons';
 import { LiaAddressCardSolid } from "react-icons/lia";
+import { MdOutlinePlayLesson } from "react-icons/md";
 import { useGetBalansQuery } from '../../context/balansApi.js';
 import { useMarkAttendanceMutation } from '../../context/qrApi.js';
 import logo from '../../assets/logo.png';
@@ -29,12 +30,11 @@ const CustomLayout = () => {
     const { data: balans, isLoading, error } = useGetBalansQuery();
     const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
     const [activeItem, setActiveItem] = useState(null);
+    const [teacherType, setTeacherType] = useState(localStorage.getItem('teacherType') || ''); // Get teacherType
 
-    //=============================================
     const [markAttendance, { isLoading: loadingQr }] = useMarkAttendanceMutation();
     const inputRef = useRef(null);
 
-    // Input maydoniga fokus qo‘yish
     // Ensure input is always focused
     useEffect(() => {
         const maintainFocus = () => {
@@ -43,12 +43,8 @@ const CustomLayout = () => {
             }
         };
 
-        // Initial focus
         maintainFocus();
 
-
-
-        // Optional: Re-focus on click anywhere in the AppQr container
         const handleContainerClick = (e) => {
             if (inputRef.current && !loadingQr) {
                 inputRef.current.focus();
@@ -67,24 +63,24 @@ const CustomLayout = () => {
         };
     }, [loadingQr]);
 
-    // QR skanerdan kelgan ma’lumotni qayta ishlash
+    // Handle QR code input
     const handleInputChange = async (e) => {
         const studentId = e.target.value.trim();
         if (studentId) {
             try {
                 const response = await markAttendance({ studentId }).unwrap();
-                message.success(response.message); // Use Ant Design message for success
-                e.target.value = ''; // Inputni tozalash
+                message.success(response.message);
+                e.target.value = '';
                 inputRef.current.focus();
             } catch (err) {
-                message.error(err.data?.message || 'Xatolik yuz berdi'); // Use Ant Design message for error
+                message.error(err.data?.message || 'Xatolik yuz berdi');
                 e.target.value = '';
                 inputRef.current.focus();
             }
         }
     };
-    //=============================================
 
+    // Handle window resize for mobile view
     useEffect(() => {
         const handleResize = () => {
             setIsMobile(window.innerWidth <= 768);
@@ -97,6 +93,7 @@ const CustomLayout = () => {
 
     const menuRef = useRef(null);
 
+    // Handle menu drag for mobile
     useEffect(() => {
         const menu = menuRef.current;
 
@@ -125,7 +122,7 @@ const CustomLayout = () => {
             if (!isDown) return;
             e.preventDefault();
             const x = e.pageX - menu.offsetLeft;
-            const walk = (x - startX) * 3; // Scroll-fast
+            const walk = (x - startX) * 3;
             menu.scrollLeft = scrollLeft - walk;
         };
 
@@ -145,7 +142,7 @@ const CustomLayout = () => {
             if (!isDown) return;
             e.preventDefault();
             const x = e.touches[0].pageX - menu.offsetLeft;
-            const walk = (x - startX) * 3; // Scroll-fast
+            const walk = (x - startX) * 3;
             menu.scrollLeft = scrollLeft - walk;
         };
 
@@ -172,6 +169,7 @@ const CustomLayout = () => {
         };
     }, []);
 
+    // Update selected menu key based on route
     useEffect(() => {
         const pathnameToKeyMap = {
             '/reports': '1',
@@ -188,8 +186,11 @@ const CustomLayout = () => {
         localStorage.removeItem("token");
         localStorage.removeItem("admin");
         localStorage.removeItem("doctorMongoId");
-        navigate("/login", { replace: true }); // Use replace to avoid adding to history
-        window.location.href = "/login"; // Fallback
+        localStorage.removeItem("teacherType");
+        localStorage.removeItem("teacherId");
+        localStorage.removeItem("selectedMenuKey");
+        navigate("/login", { replace: true });
+        window.location.href = "/login";
     };
 
     const content = (
@@ -200,11 +201,16 @@ const CustomLayout = () => {
         </div>
     );
 
-    const menuItems = [
+    // Define menu items based on teacherType
+    const menuItems = teacherType === 'teacher' ? [
+        { key: '1', icon: <LiaAddressCardSolid style={isMobile ? { fontSize: '22px' } : {}} />, label: <Link style={{ textDecoration: "none", color: "#b8b8b8" }} to="/groups">{isMobile ? "Guruhlar" : "Guruhlar"}</Link> },
+        { key: '2', icon: <UserOutlined style={isMobile ? { fontSize: '22px' } : {}} />, label: <Link style={{ textDecoration: "none", color: "#b8b8b8" }} to="/getTeacher">{isMobile ? "Ustozlar" : "Ustozlar"}</Link> },
+    ] : [
         { key: '1', icon: <FileTextOutlined style={isMobile ? { fontSize: '22px' } : {}} />, label: <Link style={{ textDecoration: "none", color: "#b8b8b8" }} to="/reports">{isMobile ? "Qabul" : "Qabul Bo'limi"}</Link> },
         { key: '2', icon: <LiaAddressCardSolid style={isMobile ? { fontSize: '22px' } : {}} />, label: <Link style={{ textDecoration: "none", color: "#b8b8b8" }} to="/createCards">{isMobile ? "Guruhlar" : "Guruhlar"}</Link> },
         { key: '3', icon: <UserOutlined style={isMobile ? { fontSize: '22px' } : {}} />, label: <Link style={{ textDecoration: "none", color: "#b8b8b8" }} to="/getTeacher">{isMobile ? "Ustozlar" : "Ustozlar"}</Link> },
         { key: '4', icon: <DollarOutlined style={isMobile ? { fontSize: '22px' } : {}} />, label: <Link style={{ textDecoration: "none", color: "#b8b8b8" }} to="/payController">{isMobile ? "To'lov" : "To'lovlar"}</Link> },
+        { key: '5', icon: <MdOutlinePlayLesson style={isMobile ? { fontSize: '22px' } : {}} />, label: <Link style={{ textDecoration: "none", color: "#b8b8b8" }} to="/lessonSchedule">{isMobile ? "Dars rejasi" : "Darslar rejalari"}</Link> },
     ];
 
     const handleClick = (item) => {
@@ -223,7 +229,7 @@ const CustomLayout = () => {
                     alignItems: 'center',
                     height: '50px',
                     padding: "0 4px",
-                    borderRadius: " 7px",
+                    borderRadius: "7px",
                     zIndex: 10,
                     backgroundColor: activeItem?.key === item.key ? 'dodgerblue' : '',
                     cursor: 'pointer',
@@ -233,7 +239,7 @@ const CustomLayout = () => {
             >
                 <span>{item.icon}</span>
                 <span style={{ fontSize: '13px', textDecoration: 'none' }}>{item.label}</span>
-            </div >
+            </div>
         ));
     };
 

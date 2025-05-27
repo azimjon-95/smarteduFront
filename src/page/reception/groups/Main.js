@@ -40,11 +40,6 @@ const Main = () => {
             label: `Qabul Bo'limi: ${dataNew?.length}`,
             children: <NewGrupps isLoading={isLoading} filteredData={dataNew} />,
         },
-        // {
-        //     key: '1',
-        //     label: `Aktiv Guruhlar: ${dataActive?.length}`,
-        //     children: <GroupInfoComponent isLoading={isLoading} filteredData={dataActive} />,
-        // },
     ];
 
     return (

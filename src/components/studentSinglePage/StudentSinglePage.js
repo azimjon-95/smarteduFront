@@ -149,7 +149,7 @@ const GroupChangeModal = ({ isOpen, onClose, groups, studentId, changeGroup }) =
             <div className="scroll-container">
                 {filteredGroups.length > 0 ? (
                     <div className="group-grid">
-                        {filteredGroups.map((group) => (
+                        {filteredGroups?.map((group) => (
                             <div
                                 key={group._id}
                                 className={`group-card ${newGroupId === group._id ? 'group-card-selected' : ''}`}

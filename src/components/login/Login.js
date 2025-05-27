@@ -19,7 +19,7 @@ function Login({ setIsLoggedIn }) {
         if (admin) {
             const routes = {
                 owner: "/reports",
-                teacher: "/teacher"
+                teacher: "/groups"
             };
             navigate(routes[admin]);
         }
@@ -61,7 +61,7 @@ function Login({ setIsLoggedIn }) {
 
                 setIsLoggedIn(true);
                 message.success("Tizimga kirish muvaffaqiyatli yakunlandi!");
-                navigate("/createCards");
+                navigate(res?.data?.teacher.teacherType === "teacher" ? "/groups" : "/reports");
             } else {
                 message.error("Kirishda xatolik yuz berdi");
             }

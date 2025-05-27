@@ -31,6 +31,11 @@ const STATUS_MAP = {
     active: 'Aktiv',
     close: 'Gruppa yopilgan',
 };
+const LEVELS = [
+    { value: 'beginner', label: 'Beginner' },
+    { value: 'intermediate', label: 'Intermediate' },
+    { value: 'advanced', label: 'Advanced' },
+];
 
 const CreateCards = () => {
     const [form] = Form.useForm();
@@ -49,6 +54,8 @@ const CreateCards = () => {
         teachers: [],
         mothlyPay: '',
         schedule: '',
+        level: 'beginner', // Default value from schema
+        step: 1, // Default value from schema
     });
 
     // API Queries and Mutations
@@ -82,7 +89,8 @@ const CreateCards = () => {
                 student.subjects.some((subject) => subject.toLowerCase().includes(searchTerm.toLowerCase())) ||
                 student.lessonTime.includes(searchTerm) ||
                 student.teachers.some((teacher) => teacher.toLowerCase().includes(searchTerm.toLowerCase())) ||
-                student.state.toLowerCase().includes(searchTerm.toLowerCase())
+                student.state.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                student.level?.toLowerCase().includes(searchTerm.toLowerCase()) // Include level in search
         );
     }, [registrations, searchTerm]);
 
@@ -127,6 +135,17 @@ const CreateCards = () => {
             render: (state) => STATUS_MAP[state] || state,
         },
         {
+            title: 'Daraja',
+            dataIndex: 'level',
+            key: 'level',
+            render: (level) => capitalizeFirstLetter(level || 'beginner'),
+        },
+        {
+            title: 'Bosqich',
+            dataIndex: 'step',
+            key: 'step',
+        },
+        {
             title: "O'chirish",
             key: 'delete',
             render: (_, record) => (
@@ -141,22 +160,7 @@ const CreateCards = () => {
                     </Button>
                 </Popconfirm>
             ),
-        },
-        {
-            title: 'Setting',
-            key: 'setting',
-            render: (_, record) => (
-                <Popconfirm
-                    title="Bu gruppani sozlashni istaysizmi?"
-                    okText="Ha"
-                    cancelText="Yo'q"
-                >
-                    <Button type="primary" size="small">
-                        Setting
-                    </Button>
-                </Popconfirm>
-            ),
-        },
+        }
     ];
 
     // Handlers
@@ -180,6 +184,8 @@ const CreateCards = () => {
                 state: 'new',
                 schedule: formData.schedule,
                 mothlyPay: Number(formData.mothlyPay),
+                level: formData.level, // Include level
+                step: Number(formData.step), // Include step
             }).unwrap();
 
             message.success('Yangi gruppa ochildi');
@@ -206,6 +212,8 @@ const CreateCards = () => {
                     subjects: updatedSubjects,
                     teachers: updatedTeachersNames,
                     teacherId: JSON.stringify(formData.teachers),
+                    level: formData.level, // Include level
+                    step: Number(formData.step), // Include step
                 },
             }).unwrap();
 
@@ -232,6 +240,8 @@ const CreateCards = () => {
         setFormData((prev) => ({
             ...prev,
             teachers: group.teacherId ? JSON.parse(group.teacherId) : [],
+            level: group.level || 'beginner', // Initialize with group level or default
+            step: group.step || 1, // Initialize with group step or default
         }));
         setIsUpdateModalOpen(true);
     };
@@ -245,6 +255,8 @@ const CreateCards = () => {
             teachers: [],
             mothlyPay: '',
             schedule: '',
+            level: 'beginner',
+            step: 1,
         });
         form.resetFields();
     };
@@ -262,7 +274,7 @@ const CreateCards = () => {
             {/* Create Group Modal */}
             <div className={`OpenReg ${isModalOpen ? 'OpenRegAll' : ''}`}>
                 <h2 style={{ textAlign: 'center' }}>Yangi gruppa ochish</h2>
-                <Form form={form} onFinish={handleFormSubmit} layout="vertical" style={{ padding: 10 }}>
+                <Form className='ant-formBox' form={form} onFinish={handleFormSubmit} layout="vertical" style={{ padding: 10 }}>
                     <Form.Item
                         name="roomNumber"
                         label="Xona raqami"
@@ -327,36 +339,34 @@ const CreateCards = () => {
                         </Select>
                     </Form.Item>
 
-                    <div style={{ display: 'flex', gap: 10 }}>
-                        <Form.Item
-                            style={{ flex: 1 }}
-                            name="teachers"
-                            label="Ustozlar"
-                            rules={[{ required: true, message: 'Ustozlarni tanlang!' }]}
-                        >
-                            <Select
-                                mode="multiple"
-                                placeholder="Ustozlarni tanlang"
-                                value={formData.teachers}
-                                onChange={(value) => handleFormChange('teachers', value)}
-                                options={teacherOptions}
-                            />
-                        </Form.Item>
+                    <Form.Item
+                        style={{ flex: 1 }}
+                        name="teachers"
+                        label="Ustozlar"
+                        rules={[{ required: true, message: 'Ustozlarni tanlang!' }]}
+                    >
+                        <Select
+                            mode="multiple"
+                            placeholder="Ustozlarni tanlang"
+                            value={formData.teachers}
+                            onChange={(value) => handleFormChange('teachers', value)}
+                            options={teacherOptions}
+                        />
+                    </Form.Item>
 
-                        <Form.Item
-                            style={{ flex: 1 }}
-                            name="mothlyPay"
-                            label="Oylik to‘lov"
-                            rules={[{ required: true, message: 'To‘lovni kiriting!' }]}
-                        >
-                            <Input
-                                placeholder="Kurs narxi"
-                                type="number"
-                                value={formData.mothlyPay}
-                                onChange={(e) => handleFormChange('mothlyPay', e.target.value)}
-                            />
-                        </Form.Item>
-                    </div>
+                    <Form.Item
+                        style={{ flex: 1 }}
+                        name="mothlyPay"
+                        label="Oylik to‘lov"
+                        rules={[{ required: true, message: 'To‘lovni kiriting!' }]}
+                    >
+                        <Input
+                            placeholder="Kurs narxi"
+                            type="number"
+                            value={formData.mothlyPay}
+                            onChange={(e) => handleFormChange('mothlyPay', e.target.value)}
+                        />
+                    </Form.Item>
 
                     <Form.Item
                         name="schedule"
@@ -369,6 +379,45 @@ const CreateCards = () => {
                             onChange={(e) => handleFormChange('schedule', e.target.value)}
                         />
                     </Form.Item>
+
+                    <div style={{ display: 'flex', gap: 10 }}>
+                        <Form.Item
+                            style={{ flex: 1 }}
+                            name="level"
+                            label="Daraja"
+                            initialValue={formData.level}
+                        >
+                            <Select
+                                placeholder="Darajani tanlang"
+                                value={formData.level}
+                                onChange={(value) => handleFormChange('level', value)}
+                            >
+                                {LEVELS.map((level) => (
+                                    <Option key={level.value} value={level.value}>
+                                        {level.label}
+                                    </Option>
+                                ))}
+                            </Select>
+                        </Form.Item>
+
+                        <Form.Item
+                            style={{ flex: 1 }}
+                            name="step"
+                            label="Bosqich"
+                            initialValue={formData.step}
+                            rules={[
+                                { required: true, message: 'Bosqichni kiriting!' },
+                                { type: 'number', min: 1, max: 10, message: 'Bosqich 1 dan 10 gacha bo‘lishi kerak!' },
+                            ]}
+                        >
+                            <Input
+                                placeholder="Bosqich (1-10)"
+                                type="number"
+                                value={formData.step}
+                                onChange={(e) => handleFormChange('step', e.target.value)}
+                            />
+                        </Form.Item>
+                    </div>
 
                     <div style={{ display: 'flex', gap: 10 }}>
                         <Button type="primary" htmlType="submit" block>
@@ -462,6 +511,44 @@ const CreateCards = () => {
                         />
                     </Form.Item>
                     <div style={{ display: 'flex', gap: 10 }}>
+                        <Form.Item
+                            style={{ flex: 1 }}
+                            name="level"
+                            label="Daraja"
+                            initialValue={formData.level}
+                        >
+                            <Select
+                                placeholder="Darajani tanlang"
+                                value={formData.level}
+                                onChange={(value) => handleFormChange('level', value)}
+                            >
+                                {LEVELS.map((level) => (
+                                    <Option key={level.value} value={level.value}>
+                                        {level.label}
+                                    </Option>
+                                ))}
+                            </Select>
+                        </Form.Item>
+
+                        <Form.Item
+                            style={{ flex: 1 }}
+                            name="step"
+                            label="Bosqich"
+                            initialValue={formData.step}
+                            rules={[
+                                { required: true, message: 'Bosqichni kiriting!' },
+                                { type: 'number', min: 1, max: 10, message: 'Bosqich 1 dan 10 gacha bo‘lishi kerak!' },
+                            ]}
+                        >
+                            <Input
+                                placeholder="Bosqich (1-10)"
+                                type="number"
+                                value={formData.step}
+                                onChange={(e) => handleFormChange('step', e.target.value)}
+                            />
+                        </Form.Item>
+                    </div>
+                    <div style={{ display: 'flex', gap: 10 }}>
                         <Button type="primary" htmlType="submit">
                             Yangilash
                         </Button>
@@ -474,3 +561,8 @@ const CreateCards = () => {
 };
 
 export default CreateCards;
+
+
+
+
+

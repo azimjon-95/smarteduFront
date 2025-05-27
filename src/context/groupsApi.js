@@ -33,9 +33,13 @@ export const groupsApi = api.injectEndpoints({
       }),
       invalidatesTags: ['Registration']
     }),
+    // React Query API slice
     getGroupsByTeacher: builder.query({
-      query: () => '/api/groups/by-teacher', // Backenddagi endpoint manzili
-      providesTags: ['Registration']
+      query: (id) => (console.log(id), {
+        url: `/api/groupsbytech/${id}`,
+        method: 'GET',
+      }),
+      providesTags: ['Registration'],
     }),
     updateTeachers: builder.mutation({
       query: ({ id, teacherId, teachers }) => ({

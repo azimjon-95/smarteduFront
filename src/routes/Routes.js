@@ -10,6 +10,8 @@ import StudentSinglePage from '../components/studentSinglePage/StudentSinglePage
 import Balans from '../page/owner/balans/Balans';
 import Single_page from '../components/workersSinglePage/WorkersSinglePage';
 import Students from '../page/reception/groups/activeGroups/students';
+import GetGroups from '../page/teachers/getGroups/GetGroups';
+import LessonSchedule from '../page/reception/lessonSchedule/LessonSchedule ';
 
 export const routes = [
     { path: '/register/:id', element: <Register /> },
@@ -23,6 +25,11 @@ export const routes = [
     { path: '/studentList/:id', element: <StudentList /> },
     { path: '/student/single_page/:id/:groupId', element: <StudentSinglePage /> },
     { path: '/students/:id', element: <Students /> },
+    { path: '/lessonSchedule', element: <LessonSchedule /> },
+
+    // ==================Teacher=======================
+    { path: '/groups', element: <GetGroups /> },
+
     { path: '/', element: <Outlet /> },
 ];
 
